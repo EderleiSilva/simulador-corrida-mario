@@ -1,18 +1,113 @@
-const player1 = {
-    NOME: "Mario",
-    VELOCIADADE: 4,
-    MANOBRABILIDADE: 3,
-    PODER: 3,
-    PONTOS: 0,
-};
+const character = {
+    "character": [
+        {
+            "ID": 1,
+            "NOME": "Mario",
+            "VELOCIADADE": 4,
+            "MANOBRABILIDADE": 3,
+            "PODER": 3,
+            "PONTOS": 0
+        },
+        {
+            "ID": 2,
+            "NOME": "Luigi",
+            "VELOCIADADE": 3,
+            "MANOBRABILIDADE": 4,
+            "PODER": 4,
+            "PONTOS": 0
+        },
+        {
+            "ID": 3,
+            "NOME": "Peach",
+            "VELOCIADADE": 3,
+            "MANOBRABILIDADE": 4,
+            "PODER": 2,
+            "PONTOS": 0
+        },
+        {
+            "ID": 4,
+            "NOME": "Yoshi",
+            "VELOCIADADE": 2,
+            "MANOBRABILIDADE": 4,
+            "PODER": 3,
+            "PONTOS": 0
+        },
+        {
+            "ID": 5,
+            "NOME": "Bowser",
+            "VELOCIADADE": 5,
+            "MANOBRABILIDADE": 2,
+            "PODER": 5,
+            "PONTOS": 0
+        },
+        {
+            "ID": 6,
+            "NOME": "Donkey Kong",
+            "VELOCIADADE": 2,
+            "MANOBRABILIDADE": 2,
+            "PODER": 5,
+            "PONTOS": 0
+        }
+    ]
+}
 
-const player2 = {
-    NOME: "Luigi",
-    VELOCIADADE: 3,
-    MANOBRABILIDADE: 4,
-    PODER: 4,
-    PONTOS: 0,
-};
+const players = {
+    "players": [
+        {
+            "ID": 1
+        },
+        {
+            "ID": 2
+        }
+    ]
+}
+
+function question(query) {
+    return new Promise(resolve => {
+        const readline = require("readline").createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        readline.question(query, answer => {
+            readline.close();
+            resolve(answer)
+        });
+    });
+}
+
+async function selectCharacter() {
+    const selections = [];
+    for (let i = 0; i < character.character.length; i++) {
+        const char = character.character[i];
+        console.log(`${char.ID} - ${char.NOME}`);
+    }
+
+    for (let j = 0; j < players.players.length; j++) {
+        const player = players.players[j];
+
+        const option = await question(`Jogador ${player.ID}, Selecione seu personagem digitando o número de 1 ao 6: `);
+        const optionChar = parseInt(option) - 1;
+        const selectedChar = character.character[optionChar];
+        
+
+        if (optionChar < character.character.length) {
+            console.log(`${player.ID} Selecionou o personagem ${selectedChar.NOME}`);
+
+            selections.push({
+                playerID: player.ID,
+                selectedCharacter: selectedChar
+            });
+        } else {
+            console.log(`Opção inválida para o jogador ${player.ID}. Por favor, selecione um número entre 1 e 6.`);
+
+            selections.push({
+                playerID: player.ID,
+                selectedCharacter: null
+            });
+        }
+    }
+    return selections
+}
 
 async function rollDice() {
     return Math.floor(Math.random() * 6) + 1;
@@ -106,9 +201,9 @@ async function declareWinner(character1, character2) {
     console.log(`${character1.NOME}: ${character1.PONTOS} ponto(s)`);
     console.log(`${character2.NOME}: ${character2.PONTOS} ponto(s)`);
 
-    if (character1.PONTOS > character2.PONTOS){
+    if (character1.PONTOS > character2.PONTOS) {
         console.log(`\n${character1.NOME} venceu a corrida! Parabéns! 🏆`);
-    } else if (character2.PONTOS > character1.PONTOS){
+    } else if (character2.PONTOS > character1.PONTOS) {
         console.log(`\n${character2.NOME} venceu a corrida! Parabéns! 🏆`);
     } else {
         console.log(`\nA corrida terminou em empate!`);
@@ -116,8 +211,12 @@ async function declareWinner(character1, character2) {
 }
 
 (async function main() {
-    console.log(`🏁🚨 Corrida entre ${player1.NOME} e ${player2.NOME} começando...\n`);
-
+    const selectPlayer = await selectCharacter();
+    console.log("🏁🚨 Comece a corrida entre os competidores: \n")
+    for(let i = 0; i < selectPlayer.length; i++){
+        console.log(`${selectPlayer.selectedCharacter}\n`);
+    }
+    
     await playRaceEngine(player1, player2);
     await declareWinner(player1, player2);
 })();
