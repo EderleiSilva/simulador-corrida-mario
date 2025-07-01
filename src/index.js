@@ -54,10 +54,12 @@ const character = {
 const players = {
     "players": [
         {
-            "ID": 1
+            "ID": 1,
+            "player":"player1"
         },
         {
-            "ID": 2
+            "ID": 2,
+            "player":"player2"
         }
     ]
 }
@@ -95,7 +97,7 @@ async function selectCharacter() {
 
             selections.push({
                 playerID: player.ID,
-                selectedCharacter: selectedChar
+                selectedCharacter: selectedChar.NOME
             });
         } else {
             console.log(`Opção inválida para o jogador ${player.ID}. Por favor, selecione um número entre 1 e 6.`);
@@ -213,10 +215,11 @@ async function declareWinner(character1, character2) {
 (async function main() {
     const selectPlayer = await selectCharacter();
     console.log("🏁🚨 Comece a corrida entre os competidores: \n")
+
     for(let i = 0; i < selectPlayer.length; i++){
-        console.log(`${selectPlayer.selectedCharacter}\n`);
+        console.log(`${selectPlayer[i].selectedCharacter}\n`);
     }
     
-    await playRaceEngine(player1, player2);
-    await declareWinner(player1, player2);
+    await playRaceEngine(players.players[0].player, players.players[1].player);
+    await declareWinner(players.players[0].player, players.players[1].player);
 })();
