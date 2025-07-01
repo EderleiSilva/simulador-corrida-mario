@@ -97,7 +97,8 @@ async function selectCharacter() {
 
             selections.push({
                 playerID: player.ID,
-                selectedCharacter: selectedChar.NOME
+                selectedCharacter: selectedChar.NOME,
+                indice: optionChar
             });
         } else {
             console.log(`Opção inválida para o jogador ${player.ID}. Por favor, selecione um número entre 1 e 6.`);
