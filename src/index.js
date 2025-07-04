@@ -55,11 +55,11 @@ const players = {
     "players": [
         {
             "ID": 1,
-            "player":"player1"
+            "player": "player1"
         },
         {
             "ID": 2,
-            "player":"player2"
+            "player": "player2"
         }
     ]
 }
@@ -78,7 +78,7 @@ function question(query) {
 }
 
 async function selectCharacter() {
-    const selections = [];
+    let selectedChar = []
     for (let i = 0; i < character.character.length; i++) {
         const char = character.character[i];
         console.log(`${char.ID} - ${char.NOME}`);
@@ -89,27 +89,13 @@ async function selectCharacter() {
 
         const option = await question(`Jogador ${player.ID}, Selecione seu personagem digitando o número de 1 ao 6: `);
         const optionChar = parseInt(option) - 1;
-        const selectedChar = character.character[optionChar];
-        
+        //selectedChar = character.character[optionChar];
+        selectedChar.push(character.character[optionChar]);
 
-        if (optionChar < character.character.length) {
-            console.log(`${player.ID} Selecionou o personagem ${selectedChar.NOME}`);
+        console.log(`${player.ID} Selecionou o personagem ${selectedChar[j].NOME}`);
 
-            selections.push({
-                playerID: player.ID,
-                selectedCharacter: selectedChar.NOME,
-                indice: optionChar
-            });
-        } else {
-            console.log(`Opção inválida para o jogador ${player.ID}. Por favor, selecione um número entre 1 e 6.`);
-
-            selections.push({
-                playerID: player.ID,
-                selectedCharacter: null
-            });
-        }
     }
-    return selections
+    return selectedChar
 }
 
 async function rollDice() {
@@ -139,6 +125,7 @@ async function logRollResult(characterName, block, diceResult, attribute) {
 }
 
 async function playRaceEngine(character1, character2) {
+
     for (let round = 1; round <= 5; round++) {
         console.log(`🏁 Rodada ${round} iniciada!`);
 
@@ -217,10 +204,10 @@ async function declareWinner(character1, character2) {
     const selectPlayer = await selectCharacter();
     console.log("🏁🚨 Comece a corrida entre os competidores: \n")
 
-    for(let i = 0; i < selectPlayer.length; i++){
+    for (let i = 0; i < selectPlayer.length; i++) {
         console.log(`${selectPlayer[i].selectedCharacter}\n`);
     }
-    
-    await playRaceEngine(players.players[0].player, players.players[1].player);
-    await declareWinner(players.players[0].player, players.players[1].player);
+
+    await playRaceEngine(selectPlayer[0], selectPlayer[1]);
+    await declareWinner(selectPlayer[0], selectPlayer[1]);
 })();
